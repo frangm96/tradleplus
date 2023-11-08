@@ -6,7 +6,21 @@ import streamlit as st
 from datetime import datetime
 
 from src.utils import show_country, show_country_palo, random_color
-
+#################################################
+# Wallpaper
+#################################################
+background_image = 'picture/wallpaper.jpeg'
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url("{background_image}");
+        background-size: cover;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 #################################################
 ##LOAD DATA
 #################################################
@@ -52,7 +66,8 @@ if 'intentos' not in st.session_state:
     st.session_state.intentos = 0
 if 'graficos' not in st.session_state:
     st.session_state.graficos = 0
-puntos_graficos={1:1,2:1,3:2,4:2,5:4}
+    st.session_state.lista_ploted=[]
+puntos_graficos={0:0,1:1,2:2,3:4,4:6,5:10}
 
 #################################################
 #Gráficos
@@ -62,7 +77,10 @@ if 'selected_graph_type' not in st.session_state:
 
 # Display the selected graph type on the screen
 selected_graph_type = st.session_state.selected_graph_type
-st.title(selected_graph_type)
+if st.session_state.lista_ploted == []:
+    st.session_state.lista_ploted.append( selected_graph_type)
+
+st.title('Tradle plus')
 
 # Load data and display the graph
 data_file = graph_data_mapping[selected_graph_type]['data_file']
@@ -82,7 +100,8 @@ else:
         data['SURFACE 2019']=data['SURFACE 2019'].drop(columns=['Total km^2'])
     data=data.melt(id_vars='Country')
 
-st.title(f'Tienes <font color="red"> {20 - (st.session_state.intentos*2)-st.session_state.intentos } </font>- puntos')
+puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
+st.title(f'Tienes <font color="red"> {puntos} </font>- puntos')
 
 random.seed(current_date)
 Country_name = random.choice(data.Country.unique())
@@ -94,6 +113,32 @@ fig = graph_function(df_Country) if selected_graph_type =='Tradle' else graph_fu
 
 st.plotly_chart(fig)
 
+############################################
+#nuevos_graficos
+############################################
+
+def generate_new_graph_data(current_graph_data, graph_data_mapping):
+    current_country = current_graph_data['Country']
+    valid_graphs = [graph for graph, data in graph_data_mapping.items() if data['Country'] == current_country]
+
+    if not valid_graphs:
+        st.error(f"No valid graphs found for country, la vida es dura.")
+        return None
+
+    new_graph_type = random.choice(valid_graphs)
+    return graph_data_mapping[new_graph_type]
+
+if st.button(f"Generar otro gráfico (Precio: {puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session_state.graficos]} puntos))"):
+    st.session_state.graficos=st.session_state.graficos+1
+    
+    
+
+
+
+
+##############################################################
+#Lista de eleccion
+##################################################################
 
 
 Country_namelist=data.Country.unique()
@@ -106,7 +151,7 @@ if 'text' not in st.session_state:
     st.session_state.text = ""
 
 # Lógica para incrementar intentos cuando se presiona el botón
-if st.button("Enviar"):
+if st.button("Enviar (Cada intento pierdes 2 puntos)"):
     st.session_state.intentos += 1
 
     if selected_Country == Country_name:

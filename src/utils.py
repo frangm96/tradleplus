@@ -32,7 +32,7 @@ def show_country(df_country):
                     values='Trade Value',  # Columna que define el tamaño en porcentajes
                     color='Section',  # Colores basados en la categoría 'Section'
                     color_discrete_map=color_dic,  # Mapeo de colores
-                    title=str(round(df_country['Trade Value'].sum()/1e9,2)) +'B' if df_country['Trade Value'].sum()>1e9 else str(round(df_country['Trade Value'].sum()/1e6,2)) +'M',
+                    title=str(round(df_country['Trade Value'].sum()/1e9,2)) +'B' if df_country['Trade Value'].sum()>1e9 else str(round(df_country['Trade Value'].sum()/1e6,2)) +'M' + ' EXPORTS OEC',
                     labels={'Section': 'Categoría', 'HS4': 'Nombre de la Caja', 'Trade Value Percentage': 'Porcentaje del Valor Comercial'})
 
 
