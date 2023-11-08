@@ -119,6 +119,7 @@ for i in range(min(st.session_state.graficos+1,6)):
         fig = graph_function(df_Country) if selected_graph_type =='Tradle' else graph_function(df_Country,selected_graph_type, random_colors) 
 
         st.plotly_chart(fig)
+    st.rerun()
 
 ############################################
 #nuevos_graficos
@@ -129,7 +130,7 @@ precio = puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session
 if st.button(f"Generar otro gráfico",disabled = st.session_state.graficos>=5):
     st.session_state.graficos+=1
     precio = puntos_graficos[st.session_state.graficos+1] - puntos_graficos[st.session_state.graficos]
-
+    
 
 st.write(f'Precio de un nuevo grafico: {precio} puntos')
 
