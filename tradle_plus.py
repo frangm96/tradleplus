@@ -41,23 +41,23 @@ graph_data_mapping = {
         'graph_function': show_country
     },
     'AGE 2022': {
-        'data_file': ('data/Country_data_palo.xlsx',0),
+        'data_file': ('data/country_data_palo.xlsx',0),
         'graph_function': show_country_palo
     },
     'SURFACE 2019': {
-    'data_file': ('data/Country_data_palo.xlsx',1),
+    'data_file': ('data/country_data_palo.xlsx',1),
     'graph_function': show_country_palo
     },
     'DEATHS 2019': {
-        'data_file': ('data/Country_data_palo.xlsx',2),
+        'data_file': ('data/country_data_palo.xlsx',2),
         'graph_function': show_country_palo
     },    
     'DEATHS BY AGE 2021': {
-        'data_file': ('data/Country_data_palo.xlsx',3),
+        'data_file': ('data/country_data_palo.xlsx',3),
         'graph_function': show_country_palo
     },    
     'EMIGRANTES RESIDENTES 2020': {
-        'data_file': ('data/Country_data_palo.xlsx',4),
+        'data_file': ('data/country_data_palo.xlsx',4),
         'graph_function': show_country_palo
     },
 
