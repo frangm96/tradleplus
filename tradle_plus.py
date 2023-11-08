@@ -104,6 +104,16 @@ if 'list_graph' not in st.session_state:
     random.shuffle(st.session_state.list_graph)
 
 # Display the selected graph type on the screen
+precio = puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session_state.graficos]
+if st.button(f"Generar otro gráfico",disabled = st.session_state.graficos>=5):
+    st.session_state.graficos+=1
+    precio = puntos_graficos[st.session_state.graficos+1] - puntos_graficos[st.session_state.graficos]
+    
+
+st.write(f'Precio de un nuevo grafico: {precio} puntos')
+
+
+
 for i in range(min(st.session_state.graficos+1,6)):
     selected_graph_type = st.session_state.list_graph[i]
 
@@ -119,19 +129,12 @@ for i in range(min(st.session_state.graficos+1,6)):
         fig = graph_function(df_Country) if selected_graph_type =='Tradle' else graph_function(df_Country,selected_graph_type, random_colors) 
 
         st.plotly_chart(fig)
-    
+        
 
 ############################################
 #nuevos_graficos
 ############################################
 
-
-precio = puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session_state.graficos]
-if st.button(f"Generar otro gráfico",disabled = st.session_state.graficos>=5, on_click=st.rerun()):
-    st.session_state.graficos+=1
-    precio = puntos_graficos[st.session_state.graficos+1] - puntos_graficos[st.session_state.graficos]
-
-st.write(f'Precio de un nuevo grafico: {precio} puntos')
 
 
 
