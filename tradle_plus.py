@@ -129,7 +129,7 @@ precio = puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session
 if st.button(f"Generar otro gráfico",disabled = st.session_state.graficos>=5):
     st.session_state.graficos+=1
     precio = puntos_graficos[st.session_state.graficos+1] - puntos_graficos[st.session_state.graficos]
-    st.rerun()
+
 
 st.write(f'Precio de un nuevo grafico: {precio} puntos')
 
