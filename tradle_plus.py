@@ -165,7 +165,8 @@ if 'text' not in st.session_state:
 
 puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
 
-if 'game_over' not in st.session_state or st.session_state.intentos < 7 or selected_Country == Country_name:
+if ('game_over' not in st.session_state or st.session_state.intentos < 7 or
+        (selected_Country == Country_name) & (st.session_state.intentos >= 1)) :
     st.session_state.game_over = False
 else:
     st.session_state.game_over = True
@@ -179,7 +180,7 @@ if not st.session_state.game_over:
             if selected_Country == Country_name:
                 #exito
                 st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
-                st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado, consiguiendo **{puntos} puntos**'
+                st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado consiguiendo **{puntos} puntos**'
                 st.session_state.game_over = True
             else:
                 distance = countries_distances_df[Country_name][selected_Country]
