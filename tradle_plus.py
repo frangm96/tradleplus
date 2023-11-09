@@ -6,6 +6,9 @@ from datetime import datetime
 
 from src.utils import DIRECTIONS_EMOJI, show_country, show_country_palo, random_color, check_password
 
+if "username" not in st.session_state:
+    st.session_state.username = None
+
 if not check_password():
     st.stop()
 
@@ -25,11 +28,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-username = ''
 
-if 'username' in st.session_state:
-    username = st.session_state.username
-    st.text(f'Bienvenid@ {username}')
+st.text(f'Bienvenid@ {st.session_state.username}')
 
 st.title('Tradle plus')
 #################################################
@@ -54,8 +54,8 @@ graph_data_mapping = {
         'graph_function': show_country_palo
     },
     'SURFACE 2019': {
-    'data_file': ('data/country_data_palo.xlsx',1),
-    'graph_function': show_country_palo
+        'data_file': ('data/country_data_palo.xlsx',1),
+        'graph_function': show_country_palo
     },
     'DEATHS 2019': {
         'data_file': ('data/country_data_palo.xlsx',2),
@@ -103,6 +103,27 @@ puntos_graficos={0:0,1:1,2:2,3:4,4:6,5:8,6:8,7:8}
 random.seed(current_date)
 Country_name = random.choice(data['Tradle'].Country.unique())
 
+#################################################
+#Conditions to disable buttons
+#################################################
+
+if 'game_won' not in st.session_state:
+    st.session_state.game_won = False
+
+if ((('game_over' not in st.session_state) |
+        ((not st.session_state.game_won) & (st.session_state.intentos < 7))) &
+        (st.session_state.intentos < 7)):
+    st.session_state.game_over = False
+else:
+    st.session_state.game_over = True
+
+if ((('graphs_over' not in st.session_state) |
+        ((not st.session_state.game_won) & (st.session_state.graficos < 6)) |
+        ((not st.session_state.game_won) & (st.session_state.intentos < 7))) &
+    (st.session_state.intentos < 7) & (st.session_state.graficos < 6)):
+    st.session_state.graphs_over = False
+else:
+    st.session_state.graphs_over = True
 
 #################################################
 #Gráficos
@@ -114,7 +135,7 @@ if 'list_graph' not in st.session_state:
 
 # Display the selected graph type on the screen
 precio = puntos_graficos[st.session_state.graficos+1]-puntos_graficos[st.session_state.graficos]
-if st.button(f"Generar otro gráfico",disabled = st.session_state.graficos>=5):
+if st.button(f"Generar otro gráfico",disabled=st.session_state.graphs_over):
     st.session_state.graficos+=1
     precio = puntos_graficos[st.session_state.graficos+1] - puntos_graficos[st.session_state.graficos]
     
@@ -165,36 +186,32 @@ if 'text' not in st.session_state:
 
 puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
 
-if ('game_over' not in st.session_state or st.session_state.intentos < 7 or
-        not ((selected_Country == Country_name) & (st.session_state.intentos >= 1))) :
-    st.session_state.game_over = False
-else:
-    st.session_state.game_over = True
-
 # Lógica para incrementar intentos cuando se presiona el botón
-if not st.session_state.game_over:
+if st.button("Enviar (Cada intento pierdes 2 puntos)", key="my_button", disabled=st.session_state.game_over):
 
-    if st.button("Enviar (Cada intento pierdes 2 puntos)", key="my_button", disabled=st.session_state.game_over):
-
-        if not st.session_state.game_over:
-            if selected_Country == Country_name:
-                #exito
-                st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
-                st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado consiguiendo **{puntos} puntos**'
+    if not st.session_state.game_over:
+        if selected_Country == Country_name:
+            #exito
+            st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
+            st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado consiguiendo **{puntos} puntos**'
+            st.session_state.game_won = True
+            st.session_state.game_over = True
+        else:
+            distance = countries_distances_df[Country_name][selected_Country]
+            direction = DIRECTIONS_EMOJI[countries_direction_df[Country_name][selected_Country]]
+            st.session_state.intentos += 1
+            st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="red"> {selected_Country} </font>- {distance} km {direction} <br>'
+            if st.session_state.intentos >= 7:
+                puntos = 0
+                st.session_state.text = st.session_state.text+ f'Has conseguido 0 puntos :(, el pais era {Country_name}'
                 st.session_state.game_over = True
-            else:
-                distance = countries_distances_df[Country_name][selected_Country]
-                direction = DIRECTIONS_EMOJI[countries_direction_df[Country_name][selected_Country]]
-                st.session_state.intentos += 1
-                st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="red"> {selected_Country} </font>- {distance} km {direction} <br>'
-                if st.session_state.intentos >= 7:
-                    puntos = 0
-                    st.session_state.text = st.session_state.text+ f'Has conseguido 0 puntos :(, el pais era {Country_name}'
-                    st.session_state.game_over = True
 
-            # Display the styled text
-            st.write(st.session_state.text, unsafe_allow_html=True)
+# Display the styled text
+st.write(st.session_state.text, unsafe_allow_html=True)
 
-puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
+if st.session_state.intentos < 7:
+    puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
+else:
+    puntos = 0
 st.title(f'**Tienes {puntos} puntos**')
 
