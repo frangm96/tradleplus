@@ -169,7 +169,7 @@ st.session_state.game_over = False
 # Lógica para incrementar intentos cuando se presiona el botón
 if st.button("Enviar (Cada intento pierdes 2 puntos)", key="my_button", disabled=st.session_state.game_over):
 
-    if st.session_state.game_over:
+    if not st.session_state.game_over:
         if selected_Country == Country_name:
             #exito
             st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
