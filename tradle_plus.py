@@ -26,7 +26,7 @@ st.markdown(
 )
 st.title('Tradle plus')
 st.text(' ')
-st.text(f'Bienvenid@ {st.session_state["username"]}')
+st.text(f'Bienvenid@ {st.session_state.username}')
 st.text(' ')
 #################################################
 ##LOAD DATA
