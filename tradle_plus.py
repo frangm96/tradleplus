@@ -191,9 +191,9 @@ if not st.session_state.game_over:
                     puntos = 0
                     st.session_state.text = st.session_state.text+ f'Has conseguido 0 puntos :(, el pais era {Country_name}'
                     st.session_state.game_over = True
-
-            # Display the styled text
-            st.write(st.session_state.text, unsafe_allow_html=True)
+            if not st.session_state.game_over:
+                # Display the styled text
+                st.write(st.session_state.text, unsafe_allow_html=True)
 
 puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
 st.title(f'**Tienes {puntos} puntos**')
