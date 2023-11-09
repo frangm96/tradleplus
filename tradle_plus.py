@@ -25,6 +25,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.title('Tradle plus')
+st.text(f'Bienvenid@ {st.session_state["username"]}')
 
 #################################################
 ##LOAD DATA
