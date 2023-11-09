@@ -173,23 +173,23 @@ else:
 # Lógica para incrementar intentos cuando se presiona el botón
 if not st.session_state.game_over:
 
-    st.button("Enviar (Cada intento pierdes 2 puntos)", key="my_button", disabled=st.session_state.game_over)
+    if st.button("Enviar (Cada intento pierdes 2 puntos)", key="my_button", disabled=st.session_state.game_over):
 
-    if not st.session_state.game_over:
-        if selected_Country == Country_name:
-            #exito
-            st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
-            st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado, consiguiendo **{puntos} puntos**'
-            st.session_state.game_over = True
-        else:
-            distance = countries_distances_df[Country_name][selected_Country]
-            direction = DIRECTIONS_EMOJI[countries_direction_df[Country_name][selected_Country]]
-            st.session_state.intentos += 1
-            st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="red"> {selected_Country} </font>- {distance} km {direction} <br>'
-            if st.session_state.intentos >= 7:
-                puntos = 0
-                st.session_state.text = st.session_state.text+ f'Has conseguido 0 puntos :(, el pais era {Country_name}'
+        if not st.session_state.game_over:
+            if selected_Country == Country_name:
+                #exito
+                st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="green"> {selected_Country} </font><br>'
+                st.session_state.text = st.session_state.text+ f'Enhorabuena :), has acertado, consiguiendo **{puntos} puntos**'
                 st.session_state.game_over = True
+            else:
+                distance = countries_distances_df[Country_name][selected_Country]
+                direction = DIRECTIONS_EMOJI[countries_direction_df[Country_name][selected_Country]]
+                st.session_state.intentos += 1
+                st.session_state.text = st.session_state.text+ f'{str(st.session_state.intentos)} - <font color="red"> {selected_Country} </font>- {distance} km {direction} <br>'
+                if st.session_state.intentos >= 7:
+                    puntos = 0
+                    st.session_state.text = st.session_state.text+ f'Has conseguido 0 puntos :(, el pais era {Country_name}'
+                    st.session_state.game_over = True
 
     # Display the styled text
 st.write(st.session_state.text, unsafe_allow_html=True)
