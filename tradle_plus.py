@@ -1,11 +1,14 @@
-import pandas
-import plotly.express as px
+import pandas as pd
 import random
 import streamlit as st
 
 from datetime import datetime
 
-from src.utils import DIRECTIONS_EMOJI, show_country, show_country_palo, random_color
+from src.utils import DIRECTIONS_EMOJI, show_country, show_country_palo, random_color, check_password
+
+if not check_password():
+    st.stop()
+
 #################################################
 # Wallpaper
 #################################################
@@ -27,8 +30,8 @@ st.title('Tradle plus')
 ##LOAD DATA
 #################################################
 
-countries_direction_df = pandas.read_csv('data/countries_direction.csv',index_col=0)
-countries_distances_df = pandas.read_csv('data/countries_distances.csv',index_col=0)
+countries_direction_df = pd.read_csv('data/countries_direction.csv',index_col=0)
+countries_distances_df = pd.read_csv('data/countries_distances.csv',index_col=0)
 # Get the current date as an integer (e.g., 20231104 for November 4, 2023)
 current_date = int(datetime.now().strftime("%Y%m%d"))
 random.seed(current_date)
@@ -66,12 +69,12 @@ if 'data' not in st.session_state:
     data={}
     for table ,dicc in graph_data_mapping.items():
         if table =='Tradle':
-            data[table]= pandas.read_csv(dicc['data_file']) 
+            data[table]= pd.read_csv(dicc['data_file']) 
 
         else: 
             data_file_path, sheet_number= dicc['data_file']
-            data[table] = pandas.read_excel(data_file_path, sheet_number)
-            xls = pandas.ExcelFile(data_file_path)
+            data[table] = pd.read_excel(data_file_path, sheet_number)
+            xls = pd.ExcelFile(data_file_path)
             sheet_name = xls.sheet_names[sheet_number]
             if sheet_name=='SURFACE 2019':
                 data['SURFACE 2019']=data['SURFACE 2019'].drop(columns=['Total km^2'])
