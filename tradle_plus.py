@@ -165,7 +165,7 @@ if 'text' not in st.session_state:
 
 puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
 
-if 'game_over' not in st.session_state or st.session_state.intentos < 7:
+if 'game_over' not in st.session_state or st.session_state.intentos < 7 or selected_Country == Country_name:
     st.session_state.game_over = False
 else:
     st.session_state.game_over = True
