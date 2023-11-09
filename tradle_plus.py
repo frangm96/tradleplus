@@ -193,7 +193,7 @@ if not st.session_state.game_over:
                     st.session_state.game_over = True
 
     # Display the styled text
-st.write(st.session_state.text, unsafe_allow_html=True)
+    st.write(st.session_state.text, unsafe_allow_html=True)
 
 puntos = 20 - (st.session_state.intentos*2)-puntos_graficos[st.session_state.graficos]
 st.title(f'**Tienes {puntos} puntos**')
